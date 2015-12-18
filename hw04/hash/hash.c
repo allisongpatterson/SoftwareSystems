@@ -134,7 +134,11 @@ int hash_hashable(Hashable *hashable)
 int equal_int (void *ip, void *jp)
 {
     // FIX ME!
-    return 0;
+    int *ipI = (int *)ip;
+    int *jpI = (int *)jp;
+    if (*ipI == *jpI) {
+        return 1;
+    } else {return 0;}
 }
 
 
@@ -142,7 +146,11 @@ int equal_int (void *ip, void *jp)
 int equal_string (void *s1, void *s2)
 {
     // FIX ME!
-    return 0;
+    char *s1C = (char *)s1;
+    char *s2C = (char *)s2;
+    if (strcmp(s1C,s2C) == 0) {
+        return 1;
+    } else {return 0;}
 }
 
 
@@ -150,7 +158,11 @@ int equal_string (void *s1, void *s2)
 int equal_hashable(Hashable *h1, Hashable *h2)
 {
     // FIX ME!
-    return 0;
+    if (h1->equal != h2->equal) {
+        return 0;
+    } else {
+    return h1->equal(h1->key,h2->key);
+    }
 }
 
 
@@ -190,7 +202,11 @@ typedef struct node {
 Node *make_node(Hashable *key, Value *value, Node *next)
 {
     // FIX ME!
-    return NULL;
+    Node *node = (Node *) malloc (sizeof (Node));
+    node->key = key;
+    node->value = value;
+    node->next = next;
+    return node;
 }
 
 
@@ -207,6 +223,10 @@ void print_node(Node *node)
 void print_list(Node *node)
 {
     // FIX ME!
+    while (node != NULL) {
+        print_node(node);
+        node = node->next;
+    }
 }
 
 
@@ -224,6 +244,13 @@ Node *prepend(Hashable *key, Value *value, Node *rest)
 Value *list_lookup(Node *list, Hashable *key)
 {
     // FIX ME!
+    Node *curr = list;
+    while (curr != NULL) {
+        if (curr->key == key) {
+            return curr->value;
+        }
+        curr = curr->next;
+    }
     return NULL;
 }
 
@@ -240,7 +267,15 @@ typedef struct map {
 Map *make_map(int n)
 {
     // FIX ME!
-    return NULL;
+    Map *map = (Map *) malloc (sizeof (Map));
+    map->n = n;
+    Node **lists = (Node **) malloc (n * sizeof(Node));
+    map->lists = lists;
+    int i;
+    for (i=0; i<n; i++) {
+        map->lsts[i] = NULL;
+    }
+    return map;
 }
 
 
@@ -262,6 +297,9 @@ void print_map(Map *map)
 void map_add(Map *map, Hashable *key, Value *value)
 {
     // FIX ME!
+    Node *rest = map->lists;
+    map = prepend(key, value, rest);
+    return map;
 }
 
 
